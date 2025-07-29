@@ -1,3 +1,5 @@
+st.write(">>> 正常启动 app >>>")
+
 import os
 import streamlit as st
 st.write("当前工作目录:", os.getcwd())
