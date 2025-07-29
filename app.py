@@ -23,7 +23,7 @@ from utils import load_model, cartoonize
 st.set_page_config(page_title="Face2Cartoon", layout="centered")
 st.title("🧑‍🎨 Face2Cartoon - Pix2Pix GAN")
 
-@st.cache_resource
+#@st.cache_resource
 def get_model():
     try:
         print("开始加载模型...")
