@@ -11,10 +11,6 @@ import torch
 import os
 from utils import load_model, cartoonize
 
-import os
-import streamlit as st
-import torch
-
 st.set_page_config(page_title="Face2Cartoon", layout="centered")
 st.title("🧑‍🎨 Face2Cartoon - Pix2Pix GAN")
 
