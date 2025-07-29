@@ -1,7 +1,7 @@
 import torch
 from torchvision import transforms
 from PIL import Image
-from model_def import model/generator.pth  # 替换为实际的Generator定义路径
+from model_def import model/generator  # 替换为实际的Generator定义路径
 
 print("当前工作目录：", os.getcwd())
 print("是否存在模型路径？", os.path.exists("model/generator.pth"))
