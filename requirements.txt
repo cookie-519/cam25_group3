@@ -1,4 +1,6 @@
-torch
+torch==2.0.1
 torchvision
 streamlit
 Pillow
+os
+image
