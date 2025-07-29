@@ -1,18 +1,15 @@
 import os
 import sys
-import os
-print("模型文件绝对路径:", os.path.abspath('model/generator.pth'))
-print("模型文件存在吗？", os.path.exists('model/generator.pth'))
-
 # 将工作目录切换为当前脚本文件所在的目录（兼容 Streamlit 启动方式）
 script_dir = os.path.dirname(os.path.abspath(__file__))
 os.chdir(script_dir)
 sys.path.append(script_dir)
 
-print(">>> 当前工作目录:", os.getcwd())
-print(">>> 模型文件存在吗？", os.path.exists("model/generator.pth"))
+import torch
 
-print(">>> 正常启动 app >>>")
+model = torch.load("model/generator.pth", map_location="cpu")
+torch.save(model, "model/generator_compressed.pth", _use_new_zipfile_serialization=True)
+
 
 import streamlit as st
 from PIL import Image
