@@ -3,7 +3,7 @@ from torchvision import transforms
 from PIL import Image
 from model_def import Generator  # 替换为实际的Generator定义路径
 
-def load_style_images(style_dir="dataset"):
+def load_model(style_dir="dataset"):
     from torchvision import transforms
     images = []
     transform = transforms.Compose([
