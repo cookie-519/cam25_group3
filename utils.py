@@ -3,9 +3,9 @@ from torchvision import transforms
 from PIL import Image
 from model_def import Generator  # 替换为实际的Generator定义路径
 
-def load_model(model_path, strict=True):
+def load_model(model_path):
     model = Generator()
-    state_dict = torch.load(model_path, map_location="cpu")
+    model.load_state_dict(torch.load(model_path, map_location="cpu"))
     model.eval()
     return model
 
