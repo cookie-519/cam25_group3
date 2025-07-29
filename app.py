@@ -6,10 +6,24 @@ from utils import load_model, cartoonize
 
 import os
 import streamlit as st
+import torch
 
-st.write("当前工作目录：", os.getcwd())
-st.write("模型文件存在吗？", os.path.exists("model/generator.pth"))
-print("模型文件存在吗？", os.path.exists("model/generator.pth"))
+st.write("当前工作目录:", os.getcwd())
+
+model_path = "model/generator.pth"
+st.write("模型路径:", model_path)
+st.write("模型文件是否存在:", os.path.exists(model_path))
+
+# 下面加载模型，如果文件不存在会报错
+if os.path.exists(model_path):
+    # 这里的GeneratorModel需要你自己的模型定义
+    model = GeneratorModel()
+    model.load_state_dict(torch.load(model_path, map_location="cpu"))
+    model.eval()
+    st.write("模型加载成功")
+else:
+    st.error("模型文件不存在，无法加载")
+
 
 st.set_page_config(page_title="Face2Cartoon", layout="centered")
 st.title("🧑‍🎨 Face2Cartoon - Pix2Pix GAN")
