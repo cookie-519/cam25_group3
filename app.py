@@ -1,3 +1,13 @@
+import os
+import streamlit as st
+
+st.write("当前工作目录:", os.getcwd())
+model_path = "model/generator.pth"
+st.write("模型路径:", model_path)
+st.write("模型绝对路径:", os.path.abspath(model_path))
+st.write("模型文件存在吗？", os.path.exists(model_path))
+
+
 import streamlit as st
 from PIL import Image
 import torch
