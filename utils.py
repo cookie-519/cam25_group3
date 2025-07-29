@@ -6,7 +6,6 @@ from model_def import Generator  # 替换为实际的Generator定义路径
 def load_model(model_path, strict=True):
     model = Generator()
     state_dict = torch.load(model_path, map_location="cpu")
-    model.load_state_dict(state_dict, strict=strict)
     model.eval()
     return model
 
