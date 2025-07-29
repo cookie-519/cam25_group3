@@ -1,6 +1,4 @@
 import os
-import streamlit as st
-
 st.write("当前工作目录:", os.getcwd())
 model_path = "model/generator.pth"
 st.write("模型路径:", model_path)
@@ -17,7 +15,7 @@ from utils import load_model, cartoonize
 st.set_page_config(page_title="Face2Cartoon", layout="centered")
 st.title("🧑‍🎨 Face2Cartoon - Pix2Pix GAN")
 
-MODEL_PATH = "model/generator.pth"
+model_path = "model/generator.pth"
 
 def check_model_file():
     st.write("当前工作目录:", os.getcwd())
