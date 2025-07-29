@@ -9,7 +9,7 @@ sys.path.append(script_dir)
 print(">>> 当前工作目录:", os.getcwd())
 print(">>> 模型文件存在吗？", os.path.exists("model/generator.pth"))
 
-st.write(">>> 正常启动 app >>>")
+print(">>> 正常启动 app >>>")
 
 import streamlit as st
 st.write("当前工作目录:", os.getcwd())
