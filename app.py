@@ -6,6 +6,11 @@ script_dir = os.path.dirname(os.path.abspath(__file__))
 os.chdir(script_dir)
 sys.path.append(script_dir)
 
+print(">>> 当前工作目录:", os.getcwd())
+print(">>> 模型文件存在吗？", os.path.exists("model/generator.pth"))
+
+print(">>> 正常启动 app >>>")
+
 import streamlit as st
 from PIL import Image
 import torch
