@@ -5,6 +5,10 @@ import os
 from utils import load_model, cartoonize
 
 import os
+import streamlit as st
+
+st.write("当前工作目录：", os.getcwd())
+st.write("模型文件存在吗？", os.path.exists("model/generator.pth"))
 print("模型文件存在吗？", os.path.exists("model/generator.pth"))
 
 st.set_page_config(page_title="Face2Cartoon", layout="centered")
