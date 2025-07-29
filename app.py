@@ -6,9 +6,6 @@ script_dir = os.path.dirname(os.path.abspath(__file__))
 os.chdir(script_dir)
 sys.path.append(script_dir)
 
-print(">>> 正常启动 app >>>")
-
-
 import streamlit as st
 from PIL import Image
 import torch
@@ -20,13 +17,19 @@ st.title("🧑‍🎨 Face2Cartoon - Pix2Pix GAN")
 
 @st.cache_resource
 def get_model():
-    return load_model('model/generator.pth')
+    try:
+        model = load_model('model/generator.pth', strict=False)  # 加了strict=False
+        st.success("模型加载成功！")
+        return model
+    except Exception as e:
+        st.error(f"模型加载失败: {e}")
+        return None
 
 model = get_model()
 
 uploaded_file = st.file_uploader("上传人脸图片", type=["jpg", "jpeg", "png"])
 
-if uploaded_file is not None:
+if uploaded_file is not None and model is not None:
     image = Image.open(uploaded_file).convert("RGB")
     st.image(image, caption="原始图片", use_column_width=True)
 
@@ -37,7 +40,7 @@ if uploaded_file is not None:
             output_img.save("output.png")
 
             with open("output.png", "rb") as f:
-                btn = st.download_button(label="下载卡通图像",
-                                         data=f,
-                                         file_name="cartoon_output.png",
-                                         mime="image/png")
+                st.download_button(label="下载卡通图像",
+                                   data=f,
+                                   file_name="cartoon_output.png",
+                                   mime="image/png")
