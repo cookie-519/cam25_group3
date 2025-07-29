@@ -5,17 +5,8 @@ script_dir = os.path.dirname(os.path.abspath(__file__))
 os.chdir(script_dir)
 sys.path.append(script_dir)
 
-import torch
-
-model = torch.load("model/generator.pth", map_location="cpu")
-model.eval()
-#torch.save(model, "model/generator_compressed.pth", _use_new_zipfile_serialization=True)
-
-
 import streamlit as st
 from PIL import Image
-import torch
-import os
 from utils import load_model, cartoonize
 
 st.set_page_config(page_title="Face2Cartoon", layout="centered")
@@ -23,16 +14,7 @@ st.title("🧑‍🎨 Face2Cartoon - Pix2Pix GAN")
 
 #@st.cache_resource
 def get_model():
-    try:
-        print("开始加载模型...")
-        model = load_model('model/generator.pth', strict=False)
-        print("模型加载成功")
-        return model
-    except Exception as e:
-        print("模型加载失败:", e)
-        st.error(f"模型加载失败: {e}")
-        return None
-
+    return load_model("model/generator_clean.pth")  # 加载新的模型文件
 
 model = get_model()
 
