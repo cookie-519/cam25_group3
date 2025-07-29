@@ -8,7 +8,8 @@ sys.path.append(script_dir)
 import torch
 
 model = torch.load("model/generator.pth", map_location="cpu")
-torch.save(model, "model/generator_compressed.pth", _use_new_zipfile_serialization=True)
+model.eval()
+#torch.save(model, "model/generator_compressed.pth", _use_new_zipfile_serialization=True)
 
 
 import streamlit as st
