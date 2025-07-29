@@ -1,5 +1,13 @@
 import os
-os.chdir(os.path.dirname(__file__))  # 将工作目录设置为当前文件所在目录
+import sys
+
+# 将工作目录切换为当前脚本文件所在的目录（兼容 Streamlit 启动方式）
+script_dir = os.path.dirname(os.path.abspath(__file__))
+os.chdir(script_dir)
+sys.path.append(script_dir)
+
+print(">>> 当前工作目录:", os.getcwd())
+print(">>> 模型文件存在吗？", os.path.exists("model/generator.pth"))
 
 st.write(">>> 正常启动 app >>>")
 
