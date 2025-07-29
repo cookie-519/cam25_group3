@@ -1,9 +1,15 @@
 import os
-import streamlit as st
+import sys
 
-model_path = "model/generator.pth"
-st.write("当前路径：", os.getcwd())
-st.write("模型文件存在吗？", os.path.exists(model_path))
+# 将工作目录切换为当前脚本文件所在的目录（兼容 Streamlit 启动方式）
+script_dir = os.path.dirname(os.path.abspath(__file__))
+os.chdir(script_dir)
+sys.path.append(script_dir)
+
+print(">>> 当前工作目录:", os.getcwd())
+print(">>> 模型文件存在吗？", os.path.exists("model/generator.pth"))
+
+print(">>> 正常启动 app >>>")
 
 import streamlit as st
 from PIL import Image
@@ -11,39 +17,29 @@ import torch
 import os
 from utils import load_model, cartoonize
 
-import os
-import streamlit as st
-import torch
-
-st.write("当前工作目录:", os.getcwd())
-
-model_path = "model/generator.pth"
-st.write("模型路径:", model_path)
-st.write("模型文件是否存在:", os.path.exists(model_path))
-
-# 下面加载模型，如果文件不存在会报错
-if os.path.exists(model_path):
-    # 这里的GeneratorModel需要你自己的模型定义
-    model = GeneratorModel()
-    model.load_state_dict(torch.load(model_path, map_location="cpu"))
-    model.eval()
-    st.write("模型加载成功")
-else:
-    st.error("模型文件不存在，无法加载")
-
-
 st.set_page_config(page_title="Face2Cartoon", layout="centered")
 st.title("🧑‍🎨 Face2Cartoon - Pix2Pix GAN")
 
 @st.cache_resource
 def get_model():
-    return load_model('model/generator.pth')
+    try:
+        model = load_model('model/generator.pth', strict=False)  # 加了strict=False
+        st.success("模型加载成功！")
+        return model
+    except Exception as e:
+        st.error(f"模型加载失败: {e}")
+        return None
 
 model = get_model()
+model = torch.load("model/generator.pth", map_location="cpu")
+
+torch.save(model.state_dict(), "model/generator_clean.pth")
+
+
 
 uploaded_file = st.file_uploader("上传人脸图片", type=["jpg", "jpeg", "png"])
 
-if uploaded_file is not None:
+if uploaded_file is not None and model is not None:
     image = Image.open(uploaded_file).convert("RGB")
     st.image(image, caption="原始图片", use_column_width=True)
 
@@ -54,7 +50,7 @@ if uploaded_file is not None:
             output_img.save("output.png")
 
             with open("output.png", "rb") as f:
-                btn = st.download_button(label="下载卡通图像",
-                                         data=f,
-                                         file_name="cartoon_output.png",
-                                         mime="image/png")
+                st.download_button(label="下载卡通图像",
+                                   data=f,
+                                   file_name="cartoon_output.png",
+                                   mime="image/png")
