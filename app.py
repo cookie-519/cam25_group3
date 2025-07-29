@@ -1,6 +1,8 @@
+import os
+os.chdir(os.path.dirname(__file__))  # 将工作目录设置为当前文件所在目录
+
 st.write(">>> 正常启动 app >>>")
 
-import os
 import streamlit as st
 st.write("当前工作目录:", os.getcwd())
 model_path = "model/generator.pth"
