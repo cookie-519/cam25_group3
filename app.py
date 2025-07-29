@@ -1,3 +1,9 @@
+import os, streamlit as st
+st.write("=== Debug ===")
+st.write("当前目录:", os.getcwd())
+st.write("model/ 目录内容:", os.listdir("model") if os.path.exists("model") else "model 目录不存在")
+st.write("generator.pth 实际大小:", os.path.getsize("model/generator.pth") if os.path.exists("model/generator.pth") else "文件不存在")
+
 import streamlit as st
 from PIL import Image
 import torch
