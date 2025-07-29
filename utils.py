@@ -3,13 +3,10 @@ from torchvision import transforms
 from PIL import Image
 from model_def import Generator  # 替换为实际的Generator定义路径
 
-print("当前工作目录：", os.getcwd())
-print("是否存在模型路径？", os.path.exists("model/generator.pth"))
-
-
-def load_model(model_path):
+def load_model(model_path, strict=True):
     model = Generator()
-    model.load_state_dict(torch.load(model_path, map_location="cpu"))
+    state_dict = torch.load(model_path, map_location="cpu")
+    model.load_state_dict(state_dict, strict=strict)
     model.eval()
     return model
 
