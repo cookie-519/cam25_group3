@@ -1,9 +1,9 @@
 import os
 st.write("当前工作目录:", os.getcwd())
-model_path = "model/generator.pth"
-st.write("模型路径:", model_path)
-st.write("模型绝对路径:", os.path.abspath(model_path))
-st.write("模型文件存在吗？", os.path.exists(model_path))
+MODEL_PATH = "model/generator.pth"
+st.write("模型路径:", MODEL_PATH)
+st.write("模型绝对路径:", os.path.abspath(MODEL_PATH))
+st.write("模型文件存在吗？", os.path.exists(MODEL_PATH))
 
 
 import streamlit as st
@@ -15,7 +15,7 @@ from utils import load_model, cartoonize
 st.set_page_config(page_title="Face2Cartoon", layout="centered")
 st.title("🧑‍🎨 Face2Cartoon - Pix2Pix GAN")
 
-model_path = "model/generator.pth"
+MODEL_PATH = "model/generator.pth"
 
 def check_model_file():
     st.write("当前工作目录:", os.getcwd())
