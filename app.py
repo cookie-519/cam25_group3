@@ -1,8 +1,9 @@
-import os, streamlit as st
-st.write("=== Debug ===")
-st.write("当前目录:", os.getcwd())
-st.write("model/ 目录内容:", os.listdir("model") if os.path.exists("model") else "model 目录不存在")
-st.write("generator.pth 实际大小:", os.path.getsize("model/generator.pth") if os.path.exists("model/generator.pth") else "文件不存在")
+import os
+import streamlit as st
+
+model_path = "model/generator.pth"
+st.write("当前路径：", os.getcwd())
+st.write("模型文件存在吗？", os.path.exists(model_path))
 
 import streamlit as st
 from PIL import Image
