@@ -4,6 +4,9 @@ import torch
 import os
 from utils import load_model, cartoonize
 
+import os
+print("模型文件存在吗？", os.path.exists("model/generator.pth"))
+
 st.set_page_config(page_title="Face2Cartoon", layout="centered")
 st.title("🧑‍🎨 Face2Cartoon - Pix2Pix GAN")
 
