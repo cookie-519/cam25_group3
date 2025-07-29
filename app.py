@@ -23,12 +23,15 @@ st.title("🧑‍🎨 Face2Cartoon - Pix2Pix GAN")
 @st.cache_resource
 def get_model():
     try:
-        model = load_model('model/generator.pth', strict=False)  # 加了strict=False
-        st.success("模型加载成功！")
+        print("开始加载模型...")
+        model = load_model('model/generator.pth', strict=False)
+        print("模型加载成功")
         return model
     except Exception as e:
+        print("模型加载失败:", e)
         st.error(f"模型加载失败: {e}")
         return None
+
 
 model = get_model()
 
