@@ -13,11 +13,16 @@ from utils import load_model, cartoonize
 
 st.set_page_config(page_title="Face2Cartoon", layout="centered")
 st.title("🧑‍🎨 Face2Cartoon - Pix2Pix GAN")
+st.write("开始加载模型...")
 
 #@st.cache_resource
 def get_model():
+
+
     try:
-        model = load_model('model/generator.pth', strict=False)  # 加了strict=False
+        model = load_model('model/generator_clean.pth', strict=False)  # 加了strict=False
+        model.load_state_dict(torch.load('model/generator_clean.pth', map_location=torch.device('cpu')))
+        st.success("模型加载成功 ✅")
         st.success("模型加载成功！")
         return model
     except Exception as e:
