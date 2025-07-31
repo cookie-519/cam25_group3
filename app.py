@@ -5,6 +5,12 @@ import streamlit as st
 from PIL import Image
 from utils import load_model, cartoonize
 from model_def import Generator  # 替换为你的文件名
+from model_loader import download_model
+download_model()
+
+# 然后加载模型
+model.load_state_dict(torch.load("model/generator_clean.pth", map_location="cpu"))
+
 
 # 将工作目录切换为当前脚本文件所在的目录（兼容 Streamlit 启动方式）
 script_dir = os.path.dirname(os.path.abspath(__file__))
