@@ -9,7 +9,7 @@ from model_loader import download_model
 download_model()
 
 # 然后加载模型
-model.load_state_dict(torch.load("model/generator_clean.pth", map_location="cpu"))
+model.load_state_dict(torch.load("model/generator.pth", map_location="cpu"))
 
 
 # 将工作目录切换为当前脚本文件所在的目录（兼容 Streamlit 启动方式）
