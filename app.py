@@ -1,15 +1,20 @@
 import os
 import sys
 import torch
+import streamlit as st
+from PIL import Image
+from utils import load_model, cartoonize
+from model_def import Generator  # 替换为你的文件名
 
 # 将工作目录切换为当前脚本文件所在的目录（兼容 Streamlit 启动方式）
 script_dir = os.path.dirname(os.path.abspath(__file__))
 os.chdir(script_dir)
 sys.path.append(script_dir)
 
-import streamlit as st
-from PIL import Image
-from utils import load_model, cartoonize
+model = Generator()
+state_dict = torch.load('model/generator.pth', map_location='cpu')
+model.load_state_dict(state_dict)
+model.eval()
 
 st.set_page_config(page_title="Face2Cartoon", layout="centered")
 st.title("🧑‍🎨 Face2Cartoon - Pix2Pix GAN")
@@ -17,21 +22,24 @@ st.write("开始加载模型...")
 
 #@st.cache_resource
 def get_model():
-
+    state_dict = torch.load('model/generator.pth', map_location='cpu')
+    for k in state_dict.keys():
+        print(k)
 
     try:
-        model = load_model('model/generator_clean.pth', strict=False)  # 加了strict=False
-        model.load_state_dict(torch.load('model/generator_clean.pth', map_location=torch.device('cpu')))
-        st.success("模型加载成功 ✅")
-        st.success("模型加载成功！")
+
+        model = load_model('model/generator.pth', strict=False)  # 加了strict=False
+        model.load_state_dict(torch.load('model/generator.pth', map_location=torch.device('cpu')))
+        missing_keys, unexpected_keys = model.load_state_dict(state_dict, strict=False)
+        print("Missing keys:", missing_keys)
+        print("Unexpected keys:", unexpected_keys)
         return model
     except Exception as e:
         st.error(f"模型加载失败: {e}")
         return None
-    return load_model("model/generator_clean.pth")  # 加载新的模型文件
+    return load_model("model/generator.pth")  # 加载新的模型文件
 
 model = get_model()
-
 
 
 
