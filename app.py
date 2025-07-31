@@ -5,6 +5,23 @@ import streamlit as st
 from PIL import Image
 from utils import cartoonize
 from model_def import Generator  # 替换为你自己的模型定义文件
+import os
+import requests
+
+def download_model():
+    url = "https://github.com/cookie-519/model-storage/raw/refs/heads/main/generator.pth?download="
+    save_path = "model/generator.pth"
+    os.makedirs("model", exist_ok=True)
+
+    if not os.path.exists(save_path):
+        print(">>> 正在下载真实模型文件...")
+        response = requests.get(url)
+        if response.status_code == 200:
+            with open(save_path, "wb") as f:
+                f.write(response.content)
+            print("✅ 模型下载完成")
+        else:
+            raise RuntimeError(f"❌ 下载失败: {response.status_code}")
 
 # 设置工作目录为脚本所在目录
 script_dir = os.path.dirname(os.path.abspath(__file__))
