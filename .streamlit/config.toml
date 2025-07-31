@@ -1,0 +1,6 @@
+[server]
+enableCORS = false
+
+[runner]
+# 强制拉取 LFS 大文件
+fastReruns = false
