@@ -11,6 +11,10 @@ import streamlit as st
 from PIL import Image
 from utils import load_model, cartoonize
 
+import os, subprocess, streamlit as st
+st.write("LFS 拉取结果：")
+st.code(subprocess.getoutput("git lfs ls-files && ls -lh model/"))
+
 st.set_page_config(page_title="Face2Cartoon", layout="centered")
 st.title("🧑‍🎨 Face2Cartoon - Pix2Pix GAN")
 st.write("开始加载模型...")
