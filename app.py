@@ -34,7 +34,7 @@ def get_model():
 
 
     try:
-        model = load_model('model/generator.pth', strict=False)  # 加了strict=False
+        model = load_model("model/generator.pth")  # 加了strict=False
         model.load_state_dict(torch.load('model/generator.pth', map_location=torch.device('cpu')))
         st.success("模型加载成功 ✅")
         st.success("模型加载成功！")
