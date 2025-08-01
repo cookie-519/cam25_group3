@@ -13,13 +13,27 @@ def load_model(model_path, strict=True):
 
 from torchvision import transforms
 
+import torch
+from PIL import Image
+import torchvision.transforms as transforms
+import streamlit as st  # 方便调试用
+
 def cartoonize(model, image):
+    # 确认image是PIL图片
+    if not isinstance(image, Image.Image):
+        raise TypeError(f"传入的image不是PIL.Image对象，而是{type(image)}")
+    # 确认是RGB图像
+    if image.mode != "RGB":
+        st.warning(f"图片模式是{image.mode}，已强制转换为RGB")
+        image = image.convert("RGB")
+
     transform = transforms.Compose([
         transforms.Resize((256, 256)),
         transforms.ToTensor(),
         transforms.Normalize([0.5, 0.5, 0.5], [0.5, 0.5, 0.5])
     ])
-    input_tensor = transform(image).unsqueeze(0)
+
+    input_tensor = transform(image).unsqueeze(0)  # (1, C, H, W)
     with torch.no_grad():
         output_tensor = model(input_tensor)[0]
     output_tensor = (output_tensor * 0.5 + 0.5).clamp(0, 1)
