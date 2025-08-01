@@ -6,10 +6,10 @@ import subprocess
 import os
 
 # 如果是云端环境（Streamlit Cloud），尝试拉取 LFS 文件
-if os.getenv("HOME") == "/home/adminuser":
-    st.info("⏳ 正在拉取 Git LFS 模型文件...")
-    result = subprocess.getoutput("git lfs pull")
-    st.code(result)
+#if os.getenv("HOME") == "/home/adminuser":
+ #st.info("⏳ 正在拉取 Git LFS 模型文件...")
+  #  result = subprocess.getoutput("git lfs pull")
+   # st.code(result)
 
 
 # 将工作目录切换为当前脚本文件所在的目录（兼容 Streamlit 启动方式）
