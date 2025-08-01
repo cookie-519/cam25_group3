@@ -3,4 +3,5 @@ torchvision
 streamlit
 Pillow
 image
-opencv-python
+opencv-python-headless
+
