@@ -19,11 +19,12 @@ st.title("🧑‍🎨 Face2Cartoon - Pix2Pix GAN")
 # 创建 model 文件夹（如果不存在）
 os.makedirs("model", exist_ok=True)
 
-MODEL_PATH = "model/generator.pth"
+MODEL_PATH = "model/generator3.pth"
 MODEL_URL = "https://github.com/cookie-519/cam25_group3/releases/download/v1.0/generator.pth"
 
 @st.cache_resource
 def get_model():
+    st.warning("🔽开始工作")
     try:
         if not os.path.exists(MODEL_PATH):
             st.warning("🔽 模型文件未找到，正在从 GitHub 下载...")
