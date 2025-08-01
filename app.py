@@ -1,59 +1,52 @@
-import os
-import sys
-import torch
-import subprocess
-from PIL import Image
 import streamlit as st
-from utils import load_model, cartoonize
+from PIL import Image
+import torch
+import os
+import requests
+from tqdm import tqdm
+from utils import load_model, cartoonize, load_style_images
 
-# 设置工作目录为脚本所在目录
-script_dir = os.path.dirname(os.path.abspath(__file__))
-os.chdir(script_dir)
-sys.path.append(script_dir)
+st.title("🧑‍🎨 Face2Cartoon with Local Style Dataset")
 
-# 显示 LFS 状态
-st.write("LFS 拉取结果：")
-st.code(subprocess.getoutput("git lfs ls-files && ls -lh model/"))
+MODEL_URL = "https://github.com/cookie-519/cam25_group3/releases/download/v1.0/generator.pth"
+MODEL_PATH = "model/generator.pth"
 
-# 页面设置
-st.set_page_config(page_title="Face2Cartoon", layout="centered")
-st.title("🧑‍🎨 Face2Cartoon - Pix2Pix GAN")
+# 下载模型（如果不存在）
+def download_model():
+    os.makedirs(os.path.dirname(MODEL_PATH), exist_ok=True)
+    if not os.path.exists(MODEL_PATH):
+        st.write("📥 正在下载模型，请稍候...")
+        with requests.get(MODEL_URL, stream=True) as r:
+            r.raise_for_status()
+            with open(MODEL_PATH, 'wb') as f:
+                for chunk in r.iter_content(chunk_size=8192):
+                    if chunk:
+                        f.write(chunk)
+        st.success("✅ 模型下载完成！")
+    else:
+        st.write("✅ 模型已存在。")
 
-# 加载模型
 @st.cache_resource
 def get_model():
-    try:
-        model = load_model("model/generator.pth")
-        model.load_state_dict(torch.load('model/generator.pth', map_location=torch.device('cpu')))
-        return model
-    except Exception as e:
-        st.error(f"模型加载失败: {e}")
-        return None
+    download_model()
+    return load_model(MODEL_PATH)
 
+@st.cache_data
+def get_style_data():
+    return load_style_images("dataset")
+
+# 加载模型和风格图像
 model = get_model()
-if model:
-    st.success("模型加载成功 ✅")
+style_images = get_style_data()
 
-# 图片上传与显示
-uploaded_file = st.file_uploader("上传人脸图片", type=["jpg", "jpeg", "png"])
-image_placeholder = st.empty()
-button_placeholder = st.empty()
-output_placeholder = st.empty()
+# 上传图像
+uploaded_file = st.file_uploader("上传一张人脸图片", type=["jpg", "jpeg", "png"])
 
-if uploaded_file is not None and model is not None:
+if uploaded_file:
     image = Image.open(uploaded_file).convert("RGB")
-    image_placeholder.image(image, caption="原始图片", use_column_width=True)
+    st.image(image, caption="原始图片", use_column_width=True)
 
-    if button_placeholder.button("生成卡通图像"):
-        with st.spinner("正在生成，请稍候..."):
-            output_img = cartoonize(model, image)
-            output_placeholder.image(output_img, caption="卡通图像", use_column_width=True)
-
-            output_img.save("output.png")
-            with open("output.png", "rb") as f:
-                st.download_button(
-                    label="下载卡通图像",
-                    data=f,
-                    file_name="cartoon_output.png",
-                    mime="image/png"
-                )
+    if st.button("生成卡通图像"):
+        with st.spinner("处理中..."):
+            output_img = cartoonize(model, image, style_images)
+            st.image(output_img, caption="卡通图像", use_column_width=True)
