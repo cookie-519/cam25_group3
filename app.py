@@ -44,22 +44,37 @@ with st.expander("🔍 模型文件状态"):
 
 model = get_model()
 
+from PIL import Image
+import streamlit as st
+
+def load_image(uploaded_file):
+    try:
+        image = Image.open(uploaded_file)
+        image = image.convert("RGB")  # 强制转成RGB格式
+        return image
+    except Exception as e:
+        st.error(f"打开图片失败: {e}")
+        return None
+
 # 图片上传与处理
 uploaded_file = st.file_uploader("上传人脸图片", type=["jpg", "jpeg", "png"])
 if uploaded_file is not None and model is not None:
-    image = Image.open(uploaded_file).convert("RGB")
-    st.image(image, caption="原始图片", use_column_width=True)
+    image = load_image(uploaded_file)
+    if image is not None:
+        st.image(image, caption="原始图片", use_column_width=True)
 
-    if st.button("生成卡通图像"):
-        with st.spinner("正在生成，请稍候..."):
-            output_img = cartoonize(model, image)
-            st.image(output_img, caption="卡通图像", use_column_width=True)
-            output_img.save("output.png")
+        if st.button("生成卡通图像"):
+            with st.spinner("正在生成，请稍候..."):
+                output_img = cartoonize(model, image)
+                st.image(output_img, caption="卡通图像", use_column_width=True)
+                output_img.save("output.png")
 
-            with open("output.png", "rb") as f:
-                st.download_button(
-                    label="下载卡通图像",
-                    data=f,
-                    file_name="cartoon_output.png",
-                    mime="image/png"
-                )
+                with open("output.png", "rb") as f:
+                    st.download_button(
+                        label="下载卡通图像",
+                        data=f,
+                        file_name="cartoon_output.png",
+                        mime="image/png"
+                    )
+    else:
+        st.error("请上传有效的图片文件")
