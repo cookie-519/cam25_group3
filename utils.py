@@ -11,11 +11,13 @@ def load_model(model_path, strict=True):
     model.eval()
     return model
 
+from torchvision import transforms
+
 def cartoonize(model, image):
     transform = transforms.Compose([
         transforms.Resize((256, 256)),
         transforms.ToTensor(),
-        transforms.Normalize([0.5], [0.5])
+        transforms.Normalize([0.5, 0.5, 0.5], [0.5, 0.5, 0.5])
     ])
     input_tensor = transform(image).unsqueeze(0)
     with torch.no_grad():
