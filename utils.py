@@ -18,24 +18,40 @@ from PIL import Image
 import torchvision.transforms as transforms
 import streamlit as st  # 方便调试用
 
+from PIL import Image
+import torch
+import torchvision.transforms as T
+import numpy as np
+
 def cartoonize(model, image):
-    # 确认image是PIL图片
-    if not isinstance(image, Image.Image):
-        raise TypeError(f"传入的image不是PIL.Image对象，而是{type(image)}")
-    # 确认是RGB图像
-    if image.mode != "RGB":
-        st.warning(f"图片模式是{image.mode}，已强制转换为RGB")
-        image = image.convert("RGB")
+    """
+    image: PIL.Image or np.ndarray (H,W,C, RGB uint8)
+    return: PIL.Image (RGB uint8)
+    """
+    # —— 1. 统一转成 PIL.Image ——
+    if isinstance(image, np.ndarray):
+        # OpenCV 读进来的 BGR 转 RGB
+        if image.ndim == 3 and image.shape[2] == 3:
+            image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+        image = Image.fromarray(image)
+    elif not isinstance(image, Image.Image):
+        raise TypeError("image must be PIL.Image or np.ndarray")
 
-    transform = transforms.Compose([
-        transforms.Resize((256, 256)),
-        transforms.ToTensor(),
-        transforms.Normalize([0.5, 0.5, 0.5], [0.5, 0.5, 0.5])
+    # —— 2. 预处理 ——
+    transform = T.Compose([
+        T.Resize(256),               # 按需修改尺寸
+        T.CenterCrop(256),
+        T.ToTensor(),                # 现在安全了
+        T.Normalize(mean=[0.5, 0.5, 0.5],
+                    std=[0.5, 0.5, 0.5])
     ])
+    tensor = transform(image).unsqueeze(0)  # [1,3,H,W]
 
-    input_tensor = transform(image).unsqueeze(0)  # (1, C, H, W)
+    # —— 3. 推理 ——
     with torch.no_grad():
-        output_tensor = model(input_tensor)[0]
-    output_tensor = (output_tensor * 0.5 + 0.5).clamp(0, 1)
-    output_image = transforms.ToPILImage()(output_tensor)
-    return output_image
+        output = model(tensor)          # 假设模型输出也是 [-1,1]
+    output = (output.squeeze().clamp(-1, 1) * 0.5 + 0.5)  # 归到 [0,1]
+
+    # —— 4. 转回 PIL ——
+    output_np = (output.permute(1, 2, 0).numpy() * 255).astype(np.uint8)
+    return Image.fromarray(output_np)
