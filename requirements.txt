@@ -4,4 +4,4 @@ streamlit
 Pillow
 image
 opencv-python-headless
-
+numpy
