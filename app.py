@@ -20,7 +20,7 @@ st.title("🧑‍🎨 Face2Cartoon - Pix2Pix GAN")
 os.makedirs("model", exist_ok=True)
 
 MODEL_PATH = "model/generator3.pth"
-MODEL_URL = "https://github.com/cookie-519/cam25_group3/releases/download/v1.0/generator.pth"
+MODEL_URL = "https://github.com/cookie-519/cam25_group3/releases/download/v1.0/generator3.pth"
 
 @st.cache_resource
 def get_model():
