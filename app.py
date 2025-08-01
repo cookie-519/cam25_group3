@@ -44,6 +44,7 @@ with st.expander("🔍 模型文件状态"):
 
 model = get_model()
 
+
 from PIL import Image
 import streamlit as st
 
@@ -51,7 +52,7 @@ def load_image(uploaded_file):
     try:
         image = Image.open(uploaded_file)
         image = image.convert("RGB")  # 强制转成RGB格式
-        return image
+        return Image.open(uploaded_file).convert("RGB")
     except Exception as e:
         st.error(f"打开图片失败: {e}")
         return None
